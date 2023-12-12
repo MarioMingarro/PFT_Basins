@@ -4,27 +4,29 @@ library(tidyverse)
 
 
 shp <- st_read("B:/A_DAVID/EUROPE/STUDY_MAP/STUDY_MAP.shp")
-
-natural <- c("PFT1", "PFT2", "PFT3", "PFT4", "PFT5", "PFT6", "PFT7", "PFT8", "PFT9", "PFT10", "PFT11", "PFT12", "PFT13", "PFT14")
+sf::st_crs(shp)
+terra::crs(raster_natural)
+forest <- c("PFT1", "PFT2", "PFT3", "PFT4", "PFT5", "PFT6", "PFT7", "PFT8")
+non_forest <- c("PFT9", "PFT10", "PFT11", "PFT12", "PFT13", "PFT14")
 irrigated_crop <- c("PFT16", "PFT18", "PFT20", "PFT22", "PFT24", "PFT26", "PFT28", "PFT30")
 non_irrigated_crop <- c("PFT15", "PFT17", "PFT19", "PFT21", "PFT23", "PFT25", "PFT27", "PFT29")
 
 
 years <- c("2015", "2020", "2025", "2030", "2035", "2040")
-
+years <- c("2015")
 
 
 ## Natural ----
 raster_natural <- raster::stack()
 
-for (i in natural){
+for (i in non_forest){
   for (j in years){
     raster <- raster::raster(paste0("B:/A_DATA/LAND_USE/PFT/PFT/GCAM-Demeter-LU/GCAM_Demeter_LU_ssp1_rcp26_modelmean_", j, ".nc"),
                      varname = paste0(i))
     raster <- t(flip(raster, direction = 'y'))
     raster <- mask(crop(raster, shp), shp)
     raster_natural <- stack(raster_natural, raster)
-    assign(paste0("raster_natural_", j), calc(raster_natural, max))
+    assign(paste0("raster_natural_", j), calc(raster_natural, median))
   }
 }
 
@@ -57,7 +59,7 @@ for (i in non_irrigated_crop){
 }
 
 
-writeRaster(raster_natural_2015, "A:/MARRUECOS/LAND_USE/raster_natural_2015.tif")
+writeRaster(raster_natural_2015, "B:/A_DAVID/EUROPE/LAND_USE/raster_non_forest_2_2015.tif")
 writeRaster(raster_natural_2020, "A:/MARRUECOS/LAND_USE/raster_natural_2020.tif")
 writeRaster(raster_natural_2025, "A:/MARRUECOS/LAND_USE/raster_natural_2025.tif")
 writeRaster(raster_natural_2030, "A:/MARRUECOS/LAND_USE/raster_natural_2030.tif")
