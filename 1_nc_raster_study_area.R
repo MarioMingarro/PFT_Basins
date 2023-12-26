@@ -53,6 +53,117 @@ for (p in years) {
 
 colnames(result_forest) <- c("HYBAS_ID", "m_2015", "m_2020", "m_2025", "m_2030", "m_2035", "m_2040", "m_2045", "m_2050", "geometry")
 
+#####################
+Data <- read_excel("./All_basins_results_GIS.xlsx", sheet = "Individual_trends")
+
+x <- "Year" # Variable dependiente
+y <- "value" # Variables independiente
+
+# PRESENTE ----
+## Natural ----
+
+### Top 5
+top_5_p_n <- filter(Data, Data$`12prior_rf_max_pres_5` == 3)
+
+top_5_p_n <- top_5_p_n[,c(8:13)]
+names <- colnames(top_5_p_n)
+top_5_p_n <- as.data.frame(t(colMedians(as.matrix(na.omit(top_5_p_n)))))
+colnames(top_5_p_n) <- names
+
+top_5_p_n <- pivot_longer(top_5_p_n, 
+                          cols = c("2015_Natural", "2020_Natural", "2025_Natural", "2030_Natural", "2035_Natural","2040_Natural"),
+                          names_to = "year" ,
+                          values_to = 'value')
+
+
+top_5_p_n <- top_5_p_n %>%
+  separate(year, c("Year", "Type"), "_") %>% 
+  mutate(priority = "Top 5")
+
+top_5_p_n$Year <- as.numeric(top_5_p_n$Year)
+
+### Rest_p_n
+Rest_p_n <- filter(Data, Data$`14prior_rf_max_pres_20` == 0|Data$`13prior_rf_max_pres_10` == 3|Data$`14prior_rf_max_pres_20` == 3)
+
+Rest_p_n <- Rest_p_n[,c(8:13)]
+names <- colnames(Rest_p_n)
+Rest_p_n <- as.data.frame(t(colMedians(as.matrix(na.omit(Rest_p_n)))))
+colnames(Rest_p_n) <- names
+
+
+Rest_p_n <- pivot_longer(Rest_p_n, 
+                         cols = c("2015_Natural", "2020_Natural", "2025_Natural", "2030_Natural", "2035_Natural","2040_Natural"),
+                         names_to = "year" ,
+                         values_to = 'value')
+
+
+Rest_p_n <- Rest_p_n %>%
+  separate(year, c("Year", "Type"), "_") %>% 
+  mutate(priority = "Rest")
+
+Rest_p_n$Year <- as.numeric(Rest_p_n$Year)
+
+All <- rbind(top_5_p_n, Rest_p_n)
+
+# Tabla vacia para guardar los resultados 
+tabla_pre <- data.frame(
+  "prior" = character(),
+  "Trend" = numeric(),
+  "t" = numeric(),
+  "p" = numeric(),
+  "Dif_pvalue" = numeric(),
+  "prior_dif" = character(),
+  "land_use" = character(), 
+  "period" = character()
+)
+
+
+# Bucle para calcular las tendencias de cada una de las cuencas
+
+prior <- unique(All$priority)
+
+for (n in 1:length(prior)) {           
+  ind <- All %>% 
+    filter(All$priority == prior[n])
+  
+  
+  tabla <- data.frame(
+    "prior" = NA,
+    "Trend" = NA,
+    "t" = NA,
+    "p" = NA,
+    "Dif_pvalue" = NA,
+    "prior_dif" = NA,
+    "land_use" = NA,
+    "period" = NA
+  )
+  gen <- All %>% 
+    filter(All$priority == prior[-n])
+  
+  model_g <- lm(ind$value ~ ind$Year, data = gen )
+  
+  tabla$prior <- unique(ind[[4]])
+  
+  model_i <-  lm(ind$value ~ ind$Year, data = ind)                
+  summary(model_i)
+  
+  tabla$Trend <- model_i$coefficients[[2]]
+  tabla$t <- summary(model_i)$coefficients[2, 3]
+  tabla$p <- summary(model_i)$coefficients[2, 4]
+  
+  dat <- rbind(gen,ind)
+  
+  model_int = lm(dat$value ~ dat$Year+dat$priority, data = dat)
+  
+  tabla$Dif_pvalue <- summary(model_int)$coefficients[3,4]
+  tabla$prior_dif <- prior[-n]
+  tabla$land_use <- c("Natural")
+  tabla$period <- c("Present")
+  
+  tabla_pre <- rbind(tabla_pre, tabla)  # Unimos tablas
+}
+##########################
+
 ## non_forest ----
 result_non_forest <- shp
 raster_non_forest <- raster::stack()
