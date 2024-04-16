@@ -3,12 +3,13 @@ library(sf)
 library(tidyverse)
 library(terra)
 
-shp <- st_read("A:/TEST/AREA_ESTUDIO.shp")
-shp_vp <- terra::vect("A:/TEST/AREA_ESTUDIO.shp")
 
-shp <- sf::st_read("B:/A_DAVID/EUROPE/STUDY_MAP/STUDY_MAP.shp")
-shp_vp <- terra::vect("B:/A_DAVID/EUROPE/STUDY_MAP/STUDY_MAP.shp")
+shp <- terra::vect("B:/A_DAVID/EUROPE/basins.shp")
+names(shp)
+plot(shp)
+crs(shp)
 
+shp <- shp[,c(1, 299, 300)]
 
 shp <- st_transform(shp, "+init=epsg:4326")
 
@@ -19,39 +20,45 @@ non_irrigated_crop <- c("PFT15", "PFT17", "PFT19", "PFT21", "PFT23", "PFT25", "P
 
 years <- c("2015", "2020", "2025", "2030", "2035", "2040", "2045", "2050")
 
-
+forest <- c("PFT1", "PFT2")
+years <- c("2015", "2020")
 ## Forest ----
-result_forest <- shp
-raster_forest <- raster::stack()
+
+raster_forest <- rast()
 
 for (i in forest){
   for (j in years){
-    raster <- raster::raster(paste0("B:/A_DATA/LAND_USE/PFT/PFT/GCAM-Demeter-LU/GCAM_Demeter_LU_ssp1_rcp26_modelmean_", j, ".nc"),
-                     varname = paste0(i))
-    raster <- t(flip(raster, direction = 'y'))
+    raster <- terra::rast(paste0("B:/A_DATA/LAND_USE/PFT/PFT/GCAM-Demeter-LU/GCAM_Demeter_LU_ssp5_rcp85_modelmean_", j, ".nc"),
+                          subds = paste0(i))
+    raster <- t(terra::flip(raster, direction = 'vertical'))
     raster <- mask(crop(raster, shp), shp)
     names(raster) <- paste0("forest_", j, "_", i)
-    raster_forest <- stack(raster_forest, raster)
+    raster_forest <- c(raster_forest, raster)
     #writeRaster(raster, paste0("A:/PFT/forest_", j,"_", i, ".tif "))
   }
 }
 
 crs(raster_forest) <- "+init=epsg:4326"
 
+result_forest <- data.frame(matrix(NA, nrow = 2, ncol = 3))
+
 for (p in years) {
-  kk <- subset(raster_forest, grep(p, names(raster_forest), value = T))
-  a <- calc(kk, max)
-  a <- as(a, "SpatRaster")
-  data <- terra::extract(a, shp_vp,  ID = TRUE)
+  a <- subset(raster_forest, grep(p, names(raster_forest), value = T))
+  a <- app(a, max)
+  data <- terra::extract(a, shp,  ID = TRUE)
   
   m <- data %>%
     group_by(ID) %>%
-    summarise(a = mean(layer))
+    summarise(a = mean(max)) #MEDIAN
+  
   m <- as.numeric(m$a)
   result_forest <- cbind(result_forest, m)
 }
 
 colnames(result_forest) <- c("HYBAS_ID", "m_2015", "m_2020", "m_2025", "m_2030", "m_2035", "m_2040", "m_2045", "m_2050", "geometry")
+writexl::write_xlsx(result_forest, "B:/A_DAVID/EUROPE/LAND_USE/RESULT/result_forest_all_EU.xlsx")
+
+
 
 #####################
 Data <- read_excel("./All_basins_results_GIS.xlsx", sheet = "Individual_trends")
