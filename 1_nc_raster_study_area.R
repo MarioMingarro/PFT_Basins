@@ -5,13 +5,10 @@ library(terra)
 
 
 shp <- terra::vect("B:/A_DAVID/EUROPE/basins.shp")
-names(shp)
-plot(shp)
-crs(shp)
 
-shp <- shp[,c(1, 299, 300)]
+shp <- shp[,c(1, 298, 299)] # Select ID, AREA, PRIORITY
 
-shp <- st_transform(shp, "+init=epsg:4326")
+shp <- project(shp, "+init=epsg:4326")
 
 forest <- c("PFT1", "PFT2", "PFT3", "PFT4", "PFT5", "PFT6", "PFT7", "PFT8")
 non_forest <- c("PFT9", "PFT10", "PFT11", "PFT12", "PFT13", "PFT14")
@@ -20,10 +17,10 @@ non_irrigated_crop <- c("PFT15", "PFT17", "PFT19", "PFT21", "PFT23", "PFT25", "P
 
 years <- c("2015", "2020", "2025", "2030", "2035", "2040", "2045", "2050")
 
-forest <- c("PFT1", "PFT2")
-years <- c("2015", "2020")
-## Forest ----
+#forest <- c("PFT1", "PFT2")
+#years <- c("2015")
 
+## Forest ----
 raster_forest <- rast()
 
 for (i in forest){
@@ -40,23 +37,26 @@ for (i in forest){
 
 crs(raster_forest) <- "+init=epsg:4326"
 
-result_forest <- data.frame(matrix(NA, nrow = 2, ncol = 3))
+result_forest <- data.frame(matrix(NA, nrow = length(shp), ncol = 1))
 
 for (p in years) {
-  a <- subset(raster_forest, grep(p, names(raster_forest), value = T))
-  a <- app(a, max)
-  data <- terra::extract(a, shp,  ID = TRUE)
+  result_raster_forest <- subset(raster_forest, grep(p, names(raster_forest), value = T))
+  result_raster_forest <- app(result_raster_forest, max)
+  data <- terra::extract(result_raster_forest, shp,  ID = TRUE)
   
   m <- data %>%
     group_by(ID) %>%
-    summarise(a = mean(max)) #MEDIAN
+    summarise(a = median(max)) #MEDIAN
   
   m <- as.numeric(m$a)
-  result_forest <- cbind(result_forest, m)
+  result_forest <- cbind(result_forest, round(m,2))
 }
 
-colnames(result_forest) <- c("HYBAS_ID", "m_2015", "m_2020", "m_2025", "m_2030", "m_2035", "m_2040", "m_2045", "m_2050", "geometry")
-writexl::write_xlsx(result_forest, "B:/A_DAVID/EUROPE/LAND_USE/RESULT/result_forest_all_EU.xlsx")
+result_forest[,1] <- shp$HYBAS_ID
+colnames(result_forest) <- c("HYBAS_ID", "y_2015", "y_2020","y_2025", "y_2030", "y_2035", "y_2040", "y_2045", "y_2050")
+
+
+writeRaster(result_forest, paste0("B:/PFT/irrigated_crop_", j,"_", i, ".tif "))
 
 
 
