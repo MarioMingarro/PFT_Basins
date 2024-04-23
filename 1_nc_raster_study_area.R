@@ -56,12 +56,12 @@ for (p in years) {
 }
 
 result_natural[,1] <- shp$HYBAS_ID
-colnames(result_natural) <- c("HYBAS_ID", "y_2015", "y_2020","y_2025", "y_2030", "y_2035", "y_2040", "y_2045", "y_2050")
+colnames(result_natural) <- c("HYBAS_ID", "2015_Natural", "2020_Natural", "2025_Natural", "2030_Natural", "2035_Natural","2040_Natural", "2040_Natural", "2050_Natural")
 
 result_natural <- cbind(prior = shp$PRIOR, area = shp$Area, lat = shp$Latitude, long = shp$Longitude, result_natural)
 
 rm(data, raster, raster_natural, result_raster_natural)
-writexl::write_xlsx(result_natural, "A:/PFT/result_natural.xlsx")
+writexl::write_xlsx(result_natural, "A:/PFT/natural_basins.xlsx")
 
 # Irrigated ----
 raster_irrigated <- rast()
@@ -95,12 +95,12 @@ for (p in years) {
 }
 
 result_irrigated[,1] <- shp$HYBAS_ID
-colnames(result_irrigated) <- c("HYBAS_ID", "y_2015", "y_2020","y_2025", "y_2030", "y_2035", "y_2040", "y_2045", "y_2050")
+colnames(result_irrigated) <- c("HYBAS_ID", "2015_Irrigated", "2020_Irrigated", "2025_Irrigated", "2030_Irrigated", "2035_Irrigated","2040_Irrigated","2045_Irrigated","2050_Irrigated")
 
 result_irrigated <- cbind(prior = shp$PRIOR, area = shp$Area, lat = shp$Latitude, long = shp$Longitude, result_irrigated)
 
 rm(data, raster, raster_irrigated, result_raster_irrigated)
-writexl::write_xlsx(result_irrigated, "A:/PFT/result_irrigated.xlsx")
+writexl::write_xlsx(result_irrigated, "A:/PFT/irrigated_basins.xlsx")
 
 # Rainfed ----
 raster_rainfed <- rast()
@@ -134,10 +134,12 @@ for (p in years) {
 }
 
 result_rainfed[,1] <- shp$HYBAS_ID
-colnames(result_rainfed) <- c("HYBAS_ID", "y_2015", "y_2020","y_2025", "y_2030", "y_2035", "y_2040", "y_2045", "y_2050")
+colnames(result_Rainfed) <- c("HYBAS_ID", "2015_Rainfed", "2020_Rainfed", "2025_Rainfed", "2030_Rainfed", "2035_Rainfed","2040_Rainfed", "2045_Rainfed", "2050_Rainfed")
 
 result_rainfed <- cbind(prior = shp$PRIOR, area = shp$Area, lat = shp$Latitude, long = shp$Longitude, result_rainfed)
 
 rm(data, raster, raster_rainfed, result_raster_rainfed)
-writexl::write_xlsx(result_rainfed, "A:/PFT/result_rainfed.xlsx")
+
+writexl::write_xlsx(result_rainfed, "A:/PFT/rainfed_basins.xlsx")
+
 
