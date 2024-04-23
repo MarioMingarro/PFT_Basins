@@ -3,10 +3,8 @@ library(sf)
 library(tidyverse)
 library(terra)
 
-
 shp <- terra::vect("B:/A_DAVID/EUROPE/basins_WGS84.shp")
 
-#shp <- shp[,c(1, 298, 299)] # Select ID, AREA, PRIORITY
 
 shp <- project(shp, "+init=epsg:4326")
 
