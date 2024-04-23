@@ -129,7 +129,7 @@ for (p in years) {
 }
 
 result_rainfed[,1] <- shp$HYBAS_ID
-colnames(result_Rainfed) <- c("HYBAS_ID", "2015_Rainfed", "2020_Rainfed", "2025_Rainfed", "2030_Rainfed", "2035_Rainfed","2040_Rainfed", "2045_Rainfed", "2050_Rainfed")
+colnames(result_rainfed) <- c("HYBAS_ID", "2015_Rainfed", "2020_Rainfed", "2025_Rainfed", "2030_Rainfed", "2035_Rainfed","2040_Rainfed", "2045_Rainfed", "2050_Rainfed")
 
 result_rainfed <- cbind(prior = shp$PRIOR, area = shp$Area, lat = shp$Latitude, long = shp$Longitude, result_rainfed)
 
