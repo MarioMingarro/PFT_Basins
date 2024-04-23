@@ -1,5 +1,4 @@
 # Natural ----
-
 natural <- readxl::read_excel("A:/PFT/natural_basins.xlsx")
 colnames(natural) <- c("prior" ,   "area"  ,   "lat"      ,"long"    , "HYBAS_ID", "2015_Natural", "2020_Natural", "2025_Natural", "2030_Natural", "2035_Natural","2040_Natural","2045_Natural","2050_Natural" )
 
@@ -93,10 +92,6 @@ model_int = lm(All$value ~ All$Year * All$priority, data = All)
 tabla$Dif_pvalue <- summary(model_int)$coefficients[4,4]
 tabla$land_use <- c("Natural")
 
-writexl::write_xlsx(tabla, "A:/PFT/natural_results.xlsx"))
+writexl::write_xlsx(tabla, "A:/PFT/natural_results.xlsx")
 
-ggplot(All, aes(Year, value, col = priority)) +
-  geom_point() +
-  geom_smooth(method = lm, se = FALSE)+
-  ylab("% Natural")+
-  xlab("Year")
+

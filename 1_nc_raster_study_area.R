@@ -14,15 +14,12 @@ shp <- project(shp, "+init=epsg:4326")
 #non_forest <- c("PFT9", "PFT10", "PFT11", "PFT12", "PFT13", "PFT14")
 
 
-natural <- c("PFT1", "PFT2", "PFT3", "PFT4", "PFT5", "PFT6", "PFT7", "PFT8", "PFT9", "PFT10",
-             "PFT11", "PFT12", "PFT13", "PFT14")
-irrigated_crop <- c("PFT16", "PFT18", "PFT20", "PFT22", "PFT24", "PFT26", "PFT28", "PFT30")
-rainfed_crop <- c("PFT15", "PFT17", "PFT19", "PFT21", "PFT23", "PFT25", "PFT27", "PFT29")
+natural <- c("PFT1", "PFT2", "PFT3", "PFT4", "PFT5", "PFT6", "PFT7",
+             "PFT8", "PFT9", "PFT10", "PFT11", "PFT12", "PFT13", "PFT14")
+irrigated <- c("PFT16", "PFT18", "PFT20", "PFT22", "PFT24", "PFT26", "PFT28", "PFT30")
+rainfed <- c("PFT15", "PFT17", "PFT19", "PFT21", "PFT23", "PFT25", "PFT27", "PFT29")
 
 years <- c("2015", "2020", "2025", "2030", "2035", "2040", "2045", "2050")
-
-#forest <- c("PFT1", "PFT2")
-#years <- c("2015", "2020")
 
 # Natural ----
 raster_natural <- rast()
@@ -56,7 +53,7 @@ for (p in years) {
 }
 
 result_natural[,1] <- shp$HYBAS_ID
-colnames(result_natural) <- c("HYBAS_ID", "2015_Natural", "2020_Natural", "2025_Natural", "2030_Natural", "2035_Natural","2040_Natural", "2040_Natural", "2050_Natural")
+colnames(result_natural) <- c("HYBAS_ID", "2015_Natural", "2020_Natural", "2025_Natural", "2030_Natural", "2035_Natural","2040_Natural", "2045_Natural", "2050_Natural")
 
 result_natural <- cbind(prior = shp$PRIOR, area = shp$Area, lat = shp$Latitude, long = shp$Longitude, result_natural)
 
