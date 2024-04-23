@@ -5,7 +5,6 @@ library(terra)
 
 shp <- terra::vect("B:/A_DAVID/EUROPE/basins_WGS84.shp")
 
-
 shp <- project(shp, "+init=epsg:4326")
 
 #forest <- c("PFT1", "PFT2", "PFT3", "PFT4", "PFT5", "PFT6", "PFT7", "PFT8")
