@@ -67,6 +67,17 @@ ggplot(All, aes(Year, value, col = priority)) +
   ylab("% Natural")+
   xlab("Year")
 
+kk <- reshape2::melt(Natural, id = prior)
+
+ggplot(natural, aes(Natural$, value, col = priority)) +
+  geom_point() +
+  geom_smooth(method = lm, se = FALSE)+
+  ylab("% Natural")+
+  xlab("Year")
+
+geom_errorbar(aes(ymin=len-sd, ymax=len+sd), width=.2,
+              position=position_dodge(0.05))
+
 # Irrigated ----
 Irrigated <- readxl::read_excel("A:/PFT/irrigated_basins.xlsx")
 
