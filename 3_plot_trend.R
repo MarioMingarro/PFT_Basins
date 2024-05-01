@@ -1,5 +1,5 @@
 Natural <- readxl::read_excel("A:/PFT/natural_basins.xlsx")
-F
+
 ## Priority ----
 prior <- filter(Natural, Natural$prior == 1)
 
