@@ -23,7 +23,7 @@ raster_natural <- rast()
 
 for (i in natural){
   for (j in years){
-    raster <- terra::rast(paste0("B:/A_DATA/LAND_USE/PFT/PFT/GCAM-Demeter-LU/GCAM_Demeter_LU_ssp5_rcp85_modelmean_", j, ".nc"),
+    raster <- terra::rast(paste0("B:/A_DATA/LAND_USE/PFT/PFT/GCAM-Demeter-LU/GCAM_Demeter_LU_ssp2_rcp45_modelmean_", j, ".nc"),
                           subds = paste0(i))
     raster <- t(terra::flip(raster, direction = 'vertical'))
     raster <- mask(crop(raster, shp), shp)
@@ -55,14 +55,14 @@ colnames(result_natural) <- c("HYBAS_ID", "2015_Natural", "2020_Natural", "2025_
 result_natural <- cbind(prior = shp$PRIOR, area = shp$Area, lat = shp$Latitude, long = shp$Longitude, result_natural)
 
 rm(data, raster, raster_natural, result_raster_natural)
-writexl::write_xlsx(result_natural, "B:/A_DAVID/EUROPE/PFT/natural_basins.xlsx")
+writexl::write_xlsx(result_natural, "B:/A_DAVID/EUROPE/PFT/RESULT/SSP2/natural_basins.xlsx")
 
 # Irrigated ----
 raster_irrigated <- rast()
 
 for (i in irrigated){
   for (j in years){
-    raster <- terra::rast(paste0("B:/A_DATA/LAND_USE/PFT/PFT/GCAM-Demeter-LU/GCAM_Demeter_LU_ssp5_rcp85_modelmean_", j, ".nc"),
+    raster <- terra::rast(paste0("B:/A_DATA/LAND_USE/PFT/PFT/GCAM-Demeter-LU/GCAM_Demeter_LU_ssp2_rcp45_modelmean_", j, ".nc"),
                           subds = paste0(i))
     raster <- t(terra::flip(raster, direction = 'vertical'))
     raster <- mask(crop(raster, shp), shp)
@@ -94,14 +94,14 @@ colnames(result_irrigated) <- c("HYBAS_ID", "2015_Irrigated", "2020_Irrigated", 
 result_irrigated <- cbind(prior = shp$PRIOR, area = shp$Area, lat = shp$Latitude, long = shp$Longitude, result_irrigated)
 
 rm(data, raster, raster_irrigated, result_raster_irrigated)
-writexl::write_xlsx(result_irrigated, "B:/A_DAVID/EUROPE/PFT/irrigated_basins.xlsx")
+writexl::write_xlsx(result_irrigated, "B:/A_DAVID/EUROPE/PFT/RESULT/SSP2/irrigated_basins.xlsx")
 
 # Rainfed ----
 raster_rainfed <- rast()
 
 for (i in rainfed){
   for (j in years){
-    raster <- terra::rast(paste0("B:/A_DATA/LAND_USE/PFT/PFT/GCAM-Demeter-LU/GCAM_Demeter_LU_ssp5_rcp85_modelmean_", j, ".nc"),
+    raster <- terra::rast(paste0("B:/A_DATA/LAND_USE/PFT/PFT/GCAM-Demeter-LU/GCAM_Demeter_LU_ssp2_rcp45_modelmean_", j, ".nc"),
                           subds = paste0(i))
     raster <- t(terra::flip(raster, direction = 'vertical'))
     raster <- mask(crop(raster, shp), shp)
@@ -134,6 +134,6 @@ result_rainfed <- cbind(prior = shp$PRIOR, area = shp$Area, lat = shp$Latitude, 
 
 rm(data, raster, raster_rainfed, result_raster_rainfed)
 
-writexl::write_xlsx(result_rainfed, "B:/A_DAVID/EUROPE/PFT/rainfed_basins.xlsx")
+writexl::write_xlsx(result_rainfed, "B:/A_DAVID/EUROPE/PFT/RESULT/SSP2/rainfed_basins.xlsx")
 
 

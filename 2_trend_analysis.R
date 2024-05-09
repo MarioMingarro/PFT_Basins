@@ -2,7 +2,7 @@
 pr <- 10
 
 # Natural ----
-Natural <- readxl::read_excel("B:/A_DAVID/EUROPE/PFT/Natural_basins.xlsx")
+Natural <- readxl::read_excel("B:/A_DAVID/EUROPE/PFT/RESULT/SSP2/Natural_basins.xlsx")
 colnames(Natural) <- c("prior" ,   "area"  ,   "lat"      ,"long"    , "HYBAS_ID", "2015_Natural", "2020_Natural", "2025_Natural", "2030_Natural", "2035_Natural","2040_Natural","2045_Natural","2050_Natural" )
 
 
@@ -94,10 +94,10 @@ model_int = lm(All$value ~ All$Year * All$priority, data = All)
 tabla$Dif_pvalue <- summary(model_int)$coefficients[4,4]
 tabla$land_use <- c("Natural")
 
-writexl::write_xlsx(tabla, paste0("B:/A_DAVID/EUROPE/PFT/RESULT/Natural_results_", pr, ".xlsx"))
+writexl::write_xlsx(tabla, paste0("B:/A_DAVID/EUROPE/PFT/RESULT/SSP2/Natural_results_", pr, ".xlsx"))
 
 # Irrigated ----
-Irrigated <- readxl::read_excel("B:/A_DAVID/EUROPE/PFT/Irrigated_basins.xlsx")
+Irrigated <- readxl::read_excel("B:/A_DAVID/EUROPE/PFT/RESULT/SSP2/Irrigated_basins.xlsx")
 colnames(Irrigated) <- c("prior" ,   "area"  ,   "lat"      ,"long"    , "HYBAS_ID", "2015_Irrigated", "2020_Irrigated", "2025_Irrigated", "2030_Irrigated", "2035_Irrigated","2040_Irrigated","2045_Irrigated","2050_Irrigated" )
 
 
@@ -190,10 +190,10 @@ model_int = lm(All$value ~ All$Year * All$priority, data = All)
 tabla$Dif_pvalue <- summary(model_int)$coefficients[4,4]
 tabla$land_use <- c("Irrigated")
 
-writexl::write_xlsx(tabla, paste0("B:/A_DAVID/EUROPE/PFT/RESULT/Irrigated_results_", pr, ".xlsx"))
+writexl::write_xlsx(tabla, paste0("B:/A_DAVID/EUROPE/PFT/RESULT/SSP2/Irrigated_results_", pr, ".xlsx"))
 
 # Rainfed ----
-Rainfed <- readxl::read_excel("B:/A_DAVID/EUROPE/PFT/Rainfed_basins.xlsx")
+Rainfed <- readxl::read_excel("B:/A_DAVID/EUROPE/PFT/RESULT/SSP2/Rainfed_basins.xlsx")
 colnames(Rainfed) <- c("prior" ,   "area"  ,   "lat"      ,"long"    , "HYBAS_ID", "2015_Rainfed", "2020_Rainfed", "2025_Rainfed", "2030_Rainfed", "2035_Rainfed","2040_Rainfed","2045_Rainfed","2050_Rainfed" )
 
 
@@ -286,4 +286,4 @@ model_int = lm(All$value ~ All$Year * All$priority, data = All)
 tabla$Dif_pvalue <- summary(model_int)$coefficients[4,4]
 tabla$land_use <- c("Rainfed")
 
-writexl::write_xlsx(tabla, paste0("B:/A_DAVID/EUROPE/PFT/RESULT/Rainfed_results_", pr, ".xlsx"))
+writexl::write_xlsx(tabla, paste0("B:/A_DAVID/EUROPE/PFT/RESULT/SSP2/Rainfed_results_", pr, ".xlsx"))
