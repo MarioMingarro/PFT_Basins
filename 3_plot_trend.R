@@ -1,7 +1,11 @@
-Natural <- readxl::read_excel("A:/PFT/natural_basins.xlsx")
-kk
+
+pr <- 1
+
+
+Natural <- readxl::read_excel("B:/A_DAVID/EUROPE/PFT/natural_basins.xlsx")
+
 ## Priority ----
-prior <- filter(Natural, Natural$prior == 1)
+prior <- filter(Natural, Natural$prior <= pr)
 
 prior <- prior[,c(6:13)]
 names <- colnames(prior)
@@ -30,7 +34,7 @@ prior <- prior %>%
 prior$Year <- as.numeric(prior$Year)
 
 ## Rest ----
-rest <- filter(Natural, Natural$prior == 0)
+rest <- filter(Natural, Natural$prior == 999)
 
 rest <- rest[,c(6:13)]
 names <- colnames(rest)
@@ -61,22 +65,18 @@ rest$Year <- as.numeric(rest$Year)
 ## Plot ----
 All <- rbind(prior, rest)
 
-ggplot(All, aes(Year, value, col = priority)) +
-  geom_point() +
-  geom_smooth(method = lm, se = FALSE)+
-  ylab("% Natural")+
-  xlab("Year")
+P1 <- ggplot(All, aes(Year, value, col = priority)) +
+  geom_point(shape = "diamond", size = 2) +
+  geom_smooth(method = lm, se = FALSE, size = .5) +
+  ylab("% Natural") +
+  xlab("Year") + scale_color_manual(
+    name = NULL,
+    guide = "legend",
+    values = c("Priority" = "darkorange2",
+               "Rest" = "gray")
+  ) +
+  theme_bw()
 
-kk <- reshape2::melt(Natural, id = prior)
-
-ggplot(natural, aes(Natural$, value, col = priority)) +
-  geom_point() +
-  geom_smooth(method = lm, se = FALSE)+
-  ylab("% Natural")+
-  xlab("Year")
-
-geom_errorbar(aes(ymin=len-sd, ymax=len+sd), width=.2,
-              position=position_dodge(0.05))
 
 # Irrigated ----
 Irrigated <- readxl::read_excel("A:/PFT/irrigated_basins.xlsx")
@@ -142,12 +142,17 @@ rest$Year <- as.numeric(rest$Year)
 ## Plot ----
 All <- rbind(prior, rest)
 
-ggplot(All, aes(Year, value, col = priority)) +
-  geom_point() +
-  geom_smooth(method = lm, se = FALSE)+
-  ylab("% Irrigated")+
-  xlab("Year")
-
+P2 <- ggplot(All, aes(Year, value, col = priority)) +
+  geom_point(shape = "diamond", size = 2) +
+  geom_smooth(method = lm, se = FALSE, size = .5) +
+  ylab("% Irrigated") +
+  xlab("Year") + scale_color_manual(
+    name = NULL,
+    guide = "legend",
+    values = c("Priority" = "darkorange2",
+               "Rest" = "gray")
+  ) +
+  theme_bw()
 # Rainfed ----
 Rainfed <- readxl::read_excel("A:/PFT/rainfed_basins.xlsx")
 
@@ -212,8 +217,38 @@ rest$Year <- as.numeric(rest$Year)
 ## Plot ----
 All <- rbind(prior, rest)
 
+P3 <- ggplot(All, aes(Year, value, col = priority)) +
+  geom_point(shape = "diamond", size = 2) +
+  geom_smooth(method = lm, se = FALSE, size = .5) +
+  ylab("% Rainfed") +
+  xlab("Year") + scale_color_manual(
+    name = NULL,
+    guide = "legend",
+    values = c("Priority" = "darkorange2",
+               "Rest" = "gray")
+  ) +
+  theme_bw()
+
+ggscatter(All, x = "Year", y = "value",
+          add = "reg.line",               # Add regression line
+          conf.int = TRUE,                # Add confidence interval
+          color = "priority", palette = "jco", # Color by groups "cyl"
+          shape = "priority"                   # Change point shape by groups "cyl"
+)+stat_cor(aes(color = priority), label.x = 2030) 
+
+library(ggpubr)
+ggarrange(P1, P2, P3,ncol = 1, nrow = 3, common.legend = T)
+
+library(geomtextpath)
+library(ggplot2)
 ggplot(All, aes(Year, value, col = priority)) +
-  geom_point() +
-  geom_smooth(method = lm, se = FALSE)+
-  ylab("% Rainfed")+
-  xlab("Year")
+  geom_point(shape = "diamond", size = 2) +
+  geom_labelsmooth(method = lm, se = FALSE, size = .5) +
+  ylab("% Rainfed") +
+  xlab("Year") + scale_color_manual(
+    name = NULL,
+    guide = "legend",
+    values = c("Priority" = "darkorange2",
+               "Rest" = "gray")
+  ) +
+  theme_bw()

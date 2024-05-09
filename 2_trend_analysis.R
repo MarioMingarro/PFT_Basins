@@ -1,11 +1,13 @@
+
+pr <- 10
+
 # Natural ----
-Natural <- readxl::read_excel("A:/PFT/Natural_basins.xlsx")
+Natural <- readxl::read_excel("B:/A_DAVID/EUROPE/PFT/Natural_basins.xlsx")
 colnames(Natural) <- c("prior" ,   "area"  ,   "lat"      ,"long"    , "HYBAS_ID", "2015_Natural", "2020_Natural", "2025_Natural", "2030_Natural", "2035_Natural","2040_Natural","2045_Natural","2050_Natural" )
 
 
-
 ## Priority ----
-prior <- filter(Natural, Natural$prior == 1)
+prior <- filter(Natural, Natural$prior <= pr)
 
 prior <- prior[,c(6:13)]
 names <- colnames(prior)
@@ -34,7 +36,7 @@ prior <- prior %>%
 prior$Year <- as.numeric(prior$Year)
 
 ## Rest ----
-rest <- filter(Natural, Natural$prior == 0)
+rest <- filter(Natural, Natural$prior == 999)
 
 rest <- rest[,c(6:13)]
 names <- colnames(rest)
@@ -92,16 +94,16 @@ model_int = lm(All$value ~ All$Year * All$priority, data = All)
 tabla$Dif_pvalue <- summary(model_int)$coefficients[4,4]
 tabla$land_use <- c("Natural")
 
-writexl::write_xlsx(tabla, "A:/PFT/Natural_results.xlsx")
+writexl::write_xlsx(tabla, paste0("B:/A_DAVID/EUROPE/PFT/RESULT/Natural_results_", pr, ".xlsx"))
 
 # Irrigated ----
-Irrigated <- readxl::read_excel("A:/PFT/Irrigated_basins.xlsx")
+Irrigated <- readxl::read_excel("B:/A_DAVID/EUROPE/PFT/Irrigated_basins.xlsx")
 colnames(Irrigated) <- c("prior" ,   "area"  ,   "lat"      ,"long"    , "HYBAS_ID", "2015_Irrigated", "2020_Irrigated", "2025_Irrigated", "2030_Irrigated", "2035_Irrigated","2040_Irrigated","2045_Irrigated","2050_Irrigated" )
 
 
 
 ## Priority ----
-prior <- filter(Irrigated, Irrigated$prior == 1)
+prior <- filter(Irrigated, Irrigated$prior <= pr)
 
 prior <- prior[,c(6:13)]
 names <- colnames(prior)
@@ -130,7 +132,7 @@ prior <- prior %>%
 prior$Year <- as.numeric(prior$Year)
 
 ## Rest ----
-rest <- filter(Irrigated, Irrigated$prior == 0)
+rest <- filter(Irrigated, Irrigated$prior == 999)
 
 rest <- rest[,c(6:13)]
 names <- colnames(rest)
@@ -188,17 +190,16 @@ model_int = lm(All$value ~ All$Year * All$priority, data = All)
 tabla$Dif_pvalue <- summary(model_int)$coefficients[4,4]
 tabla$land_use <- c("Irrigated")
 
-writexl::write_xlsx(tabla, "A:/PFT/Irrigated_results.xlsx")
-
+writexl::write_xlsx(tabla, paste0("B:/A_DAVID/EUROPE/PFT/RESULT/Irrigated_results_", pr, ".xlsx"))
 
 # Rainfed ----
-Rainfed <- readxl::read_excel("A:/PFT/Rainfed_basins.xlsx")
+Rainfed <- readxl::read_excel("B:/A_DAVID/EUROPE/PFT/Rainfed_basins.xlsx")
 colnames(Rainfed) <- c("prior" ,   "area"  ,   "lat"      ,"long"    , "HYBAS_ID", "2015_Rainfed", "2020_Rainfed", "2025_Rainfed", "2030_Rainfed", "2035_Rainfed","2040_Rainfed","2045_Rainfed","2050_Rainfed" )
 
 
 
 ## Priority ----
-prior <- filter(Rainfed, Rainfed$prior == 1)
+prior <- filter(Rainfed, Rainfed$prior <= pr)
 
 prior <- prior[,c(6:13)]
 names <- colnames(prior)
@@ -227,7 +228,7 @@ prior <- prior %>%
 prior$Year <- as.numeric(prior$Year)
 
 ## Rest ----
-rest <- filter(Rainfed, Rainfed$prior == 0)
+rest <- filter(Rainfed, Rainfed$prior == 999)
 
 rest <- rest[,c(6:13)]
 names <- colnames(rest)
@@ -285,4 +286,4 @@ model_int = lm(All$value ~ All$Year * All$priority, data = All)
 tabla$Dif_pvalue <- summary(model_int)$coefficients[4,4]
 tabla$land_use <- c("Rainfed")
 
-writexl::write_xlsx(tabla, "A:/PFT/Rainfed_results.xlsx")
+writexl::write_xlsx(tabla, paste0("B:/A_DAVID/EUROPE/PFT/RESULT/Rainfed_results_", pr, ".xlsx"))

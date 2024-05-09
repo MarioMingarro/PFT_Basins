@@ -3,7 +3,7 @@ library(sf)
 library(tidyverse)
 library(terra)
 
-shp <- terra::vect("B:/A_DAVID/EUROPE/basins_WGS84.shp")
+shp <- terra::vect("B:/A_DAVID/EUROPE/basins_WGS84_PRIOR.shp")
 
 shp <- project(shp, "+init=epsg:4326")
 
@@ -55,7 +55,7 @@ colnames(result_natural) <- c("HYBAS_ID", "2015_Natural", "2020_Natural", "2025_
 result_natural <- cbind(prior = shp$PRIOR, area = shp$Area, lat = shp$Latitude, long = shp$Longitude, result_natural)
 
 rm(data, raster, raster_natural, result_raster_natural)
-writexl::write_xlsx(result_natural, "A:/PFT/natural_basins.xlsx")
+writexl::write_xlsx(result_natural, "B:/A_DAVID/EUROPE/PFT/natural_basins.xlsx")
 
 # Irrigated ----
 raster_irrigated <- rast()
@@ -94,7 +94,7 @@ colnames(result_irrigated) <- c("HYBAS_ID", "2015_Irrigated", "2020_Irrigated", 
 result_irrigated <- cbind(prior = shp$PRIOR, area = shp$Area, lat = shp$Latitude, long = shp$Longitude, result_irrigated)
 
 rm(data, raster, raster_irrigated, result_raster_irrigated)
-writexl::write_xlsx(result_irrigated, "A:/PFT/irrigated_basins.xlsx")
+writexl::write_xlsx(result_irrigated, "B:/A_DAVID/EUROPE/PFT/irrigated_basins.xlsx")
 
 # Rainfed ----
 raster_rainfed <- rast()
@@ -134,6 +134,6 @@ result_rainfed <- cbind(prior = shp$PRIOR, area = shp$Area, lat = shp$Latitude, 
 
 rm(data, raster, raster_rainfed, result_raster_rainfed)
 
-writexl::write_xlsx(result_rainfed, "A:/PFT/rainfed_basins.xlsx")
+writexl::write_xlsx(result_rainfed, "B:/A_DAVID/EUROPE/PFT/rainfed_basins.xlsx")
 
 
