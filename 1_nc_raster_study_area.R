@@ -3,7 +3,7 @@ library(sf)
 library(tidyverse)
 library(terra)
 
-shp <- terra::vect("B:/A_DAVID/EUROPE/basins_WGS84_PRIOR.shp")
+shp <- terra::vect("B:/A_DAVID/EUROPE/PFT/basins_WGS84_PRIOR.shp")
 
 shp <- project(shp, "+init=epsg:4326")
 
@@ -70,7 +70,15 @@ for (i in irrigated){
     raster_irrigated <- c(raster_irrigated, raster)
   }
 }
+###
+for (p in years) {
+  result_raster_irrigated <- subset(raster_irrigated, grep(p, names(raster_irrigated), value = T))
+  result_raster_irrigated <- app(result_raster_irrigated, max, cores=6)
+  writeRaster(result_raster_irrigated, paste0("B:/A_DAVID/EUROPE/PFT/RESULT/irrigated", p, ".tif") )
+  }
+plot(raster_irrigated)
 
+#####
 crs(raster_irrigated) <- "+init=epsg:4326"
 
 result_irrigated <- data.frame(matrix(NA, nrow = length(shp), ncol = 1))
